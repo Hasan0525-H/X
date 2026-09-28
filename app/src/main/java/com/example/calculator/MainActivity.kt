@@ -12,15 +12,15 @@ import androidx.compose.ui.unit.dp
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            CalculatorApp()
-        }
+        setContent { CalculatorApp() }
     }
 }
 
 @Composable
 fun CalculatorApp() {
-    var value by remember { mutableStateOf("") }
+    var display by remember { mutableStateOf("") }
+    var firstNumber by remember { mutableStateOf(0.0) }
+    var operation by remember { mutableStateOf("") }
 
     val buttons = listOf(
         "7","8","9","÷",
@@ -29,27 +29,47 @@ fun CalculatorApp() {
         "C","0","=","+"
     )
 
+    fun calculate() {
+        val second = display.toDoubleOrNull() ?: 0.0
+        val result = when(operation) {
+            "+" -> firstNumber + second
+            "-" -> firstNumber - second
+            "×" -> firstNumber * second
+            "÷" -> if (second != 0.0) firstNumber / second else 0.0
+            else -> second
+        }
+        display = result.toString().removeSuffix(".0")
+        operation = ""
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = value, style = MaterialTheme.typography.headlineLarge)
-        Spacer(modifier = Modifier.height(20.dp))
+        Text(display.ifEmpty { "0" }, style = MaterialTheme.typography.headlineLarge)
+        Spacer(Modifier.height(20.dp))
 
         buttons.chunked(4).forEach { row ->
-            Row(modifier = Modifier.fillMaxWidth()) {
-                row.forEach { text ->
+            Row(Modifier.fillMaxWidth()) {
+                row.forEach { button ->
                     Button(
                         onClick = {
-                            when(text) {
-                                "C" -> value = ""
-                                else -> value += text
+                            when {
+                                button == "C" -> {
+                                    display = ""
+                                    operation = ""
+                                }
+                                button == "=" -> calculate()
+                                button in listOf("+","-","×","÷") -> {
+                                    firstNumber = display.toDoubleOrNull() ?: 0.0
+                                    operation = button
+                                    display = ""
+                                }
+                                else -> display += button
                             }
                         },
                         modifier = Modifier.weight(1f).padding(4.dp)
-                    ) {
-                        Text(text)
-                    }
+                    ) { Text(button) }
                 }
             }
         }
