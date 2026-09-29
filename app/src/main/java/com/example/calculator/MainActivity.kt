@@ -24,15 +24,15 @@ fun CalculatorApp() {
     var firstNumber by remember { mutableStateOf(0.0) }
     var operation by remember { mutableStateOf("") }
 
-    val buttons = listOf("7","8","9","÷","4","5","6","×","1","2","3","-","C","0","=","+")
+    val buttons = listOf("7","8","9","÷","4","5","6","×","1","2","3","-",".","0","=","+")
 
     fun calculate() {
-        val second = display.toDoubleOrNull() ?: 0.0
+        val second = display.toDoubleOrNull() ?: return
         display = when(operation) {
-            "+" -> (firstNumber + second)
-            "-" -> (firstNumber - second)
-            "×" -> (firstNumber * second)
-            "÷" -> if(second != 0.0) firstNumber / second else 0.0
+            "+" -> firstNumber + second
+            "-" -> firstNumber - second
+            "×" -> firstNumber * second
+            "÷" -> if (second != 0.0) firstNumber / second else Double.NaN
             else -> second
         }.toString().removeSuffix(".0")
         operation = ""
@@ -57,7 +57,6 @@ fun CalculatorApp() {
                     Button(
                         onClick = {
                             when {
-                                button == "C" -> { display = ""; operation = "" }
                                 button == "=" -> calculate()
                                 button in listOf("+","-","×","÷") -> {
                                     firstNumber = display.toDoubleOrNull() ?: 0.0
@@ -73,5 +72,10 @@ fun CalculatorApp() {
                 }
             }
         }
+
+        Button(
+            onClick = { display = ""; operation = "" },
+            modifier = Modifier.fillMaxWidth().padding(5.dp)
+        ) { Text("C") }
     }
 }
