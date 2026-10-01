@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -39,19 +39,13 @@ fun CalculatorApp() {
         operation = ""
     }
 
-    fun clear() {
-        display = ""
-        firstNumber = 0.0
-        operation = ""
-    }
-
     Column(
         modifier = Modifier.fillMaxSize().padding(20.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = display.ifEmpty { "0" },
-            style = MaterialTheme.typography.displayMedium,
+            style = MaterialTheme.typography.displayLarge,
             textAlign = TextAlign.End,
             modifier = Modifier.fillMaxWidth()
         )
@@ -73,16 +67,16 @@ fun CalculatorApp() {
                                 else -> display += button
                             }
                         },
-                        shape = RoundedCornerShape(20.dp),
-                        modifier = Modifier.weight(1f).padding(5.dp)
+                        shape = CircleShape,
+                        modifier = Modifier.weight(1f).padding(6.dp).height(64.dp)
                     ) { Text(button) }
                 }
             }
         }
 
         Button(
-            onClick = { clear() },
-            modifier = Modifier.fillMaxWidth().padding(5.dp)
-        ) { Text("C") }
+            onClick = { display = ""; firstNumber = 0.0; operation = "" },
+            modifier = Modifier.fillMaxWidth().padding(6.dp)
+        ) { Text("مسح") }
     }
 }
