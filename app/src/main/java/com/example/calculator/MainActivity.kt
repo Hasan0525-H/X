@@ -27,14 +27,21 @@ fun CalculatorApp() {
     val buttons = listOf("7","8","9","÷","4","5","6","×","1","2","3","-",".","0","=","+")
 
     fun calculate() {
-        val second = display.toDoubleOrNull() ?: return
-        display = when(operation) {
+        val second = display.toDoubleOrNull() ?: 0.0
+        val result = when(operation) {
             "+" -> firstNumber + second
             "-" -> firstNumber - second
             "×" -> firstNumber * second
-            "÷" -> if (second != 0.0) firstNumber / second else Double.NaN
+            "÷" -> if (second != 0.0) firstNumber / second else 0.0
             else -> second
-        }.toString().removeSuffix(".0")
+        }
+        display = result.toString().removeSuffix(".0")
+        operation = ""
+    }
+
+    fun clear() {
+        display = ""
+        firstNumber = 0.0
         operation = ""
     }
 
@@ -74,7 +81,7 @@ fun CalculatorApp() {
         }
 
         Button(
-            onClick = { display = ""; operation = "" },
+            onClick = { clear() },
             modifier = Modifier.fillMaxWidth().padding(5.dp)
         ) { Text("C") }
     }
