@@ -26,9 +26,11 @@ fun CalculatorApp() {
     var darkMode by remember { mutableStateOf(false) }
     val history = remember { mutableStateListOf<String>() }
 
-    val buttons = listOf("7","8","9","÷","4","5","6","×","1","2","3","-",".","0","=","+")
+    val buttons = listOf("7", "8", "9", "÷", "4", "5", "6", "×", "1", "2", "3", "-", ".", "0", "=", "+")
 
-    MaterialTheme(darkColorScheme = if (darkMode) darkColorScheme() else lightColorScheme()) {
+    val colors = if (darkMode) darkColorScheme() else lightColorScheme()
+
+    MaterialTheme(colorScheme = colors) {
         Column(
             modifier = Modifier.fillMaxSize().padding(20.dp),
             verticalArrangement = Arrangement.Center
@@ -56,7 +58,7 @@ fun CalculatorApp() {
                                 when {
                                     button == "=" -> {
                                         val second = display.toDoubleOrNull() ?: 0.0
-                                        val result = when(operation) {
+                                        val result = when (operation) {
                                             "+" -> firstNumber + second
                                             "-" -> firstNumber - second
                                             "×" -> firstNumber * second
@@ -68,7 +70,7 @@ fun CalculatorApp() {
                                         display = answer
                                         operation = ""
                                     }
-                                    button in listOf("+","-","×","÷") -> {
+                                    button in listOf("+", "-", "×", "÷") -> {
                                         firstNumber = display.toDoubleOrNull() ?: 0.0
                                         operation = button
                                         display = ""
