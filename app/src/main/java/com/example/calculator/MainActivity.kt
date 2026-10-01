@@ -23,6 +23,7 @@ fun CalculatorApp() {
     var display by remember { mutableStateOf("") }
     var firstNumber by remember { mutableStateOf(0.0) }
     var operation by remember { mutableStateOf("") }
+    val history = remember { mutableStateListOf<String>() }
 
     val buttons = listOf("7","8","9","÷","4","5","6","×","1","2","3","-",".","0","=","+")
 
@@ -35,7 +36,9 @@ fun CalculatorApp() {
             "÷" -> if (second != 0.0) firstNumber / second else 0.0
             else -> second
         }
-        display = result.toString().removeSuffix(".0")
+        val answer = result.toString().removeSuffix(".0")
+        history.add("$firstNumber $operation $second = $answer")
+        display = answer
         operation = ""
     }
 
@@ -50,7 +53,7 @@ fun CalculatorApp() {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
         buttons.chunked(4).forEach { row ->
             Row(Modifier.fillMaxWidth()) {
@@ -75,8 +78,18 @@ fun CalculatorApp() {
         }
 
         Button(
-            onClick = { display = ""; firstNumber = 0.0; operation = "" },
+            onClick = {
+                display = ""
+                firstNumber = 0.0
+                operation = ""
+                history.clear()
+            },
             modifier = Modifier.fillMaxWidth().padding(6.dp)
         ) { Text("مسح") }
+
+        if (history.isNotEmpty()) {
+            Text("آخر العمليات", style = MaterialTheme.typography.titleMedium)
+            history.takeLast(3).forEach { Text(it) }
+        }
     }
 }
