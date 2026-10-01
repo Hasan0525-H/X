@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:theme="@style/Theme.Calculator"
-        android:label="الآلة الحاسبة">
+        android:label="الآلة الحاسبة"
+        android:icon="@drawable/ic_calculator">
         <activity
             android:name=".MainActivity"
             android:exported="true">
